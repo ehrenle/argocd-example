@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-dashboard-users
+spec:
+  destination:
+    name: ''
+    namespace: kubernetes-dashboard
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: k8s-dashboard
+    repoURL: 'https://github.com/ehrenle/argocd-example.git'
+    targetRevision: HEAD
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

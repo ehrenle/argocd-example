@@ -1,0 +1,66 @@
+# dashboard-admin-user
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: kubernetes-dashboard
+  name: dashboard-admin-user
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: kubernetes-dashboard
+  name: dashboard-admin-user-secret
+  annotations:
+    kubernetes.io/service-account.name: dashboard-admin-user
+type: kubernetes.io/service-account-token
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dashboard-admin-user-binding
+subjects:
+- kind: ServiceAccount
+  name: dashboard-admin-user
+  namespace: kubernetes-dashboard
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+# dashboard-view-user
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: kubernetes-dashboard
+  name: dashboard-view-user
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: kubernetes-dashboard
+  name: dashboard-view-user-secret
+  annotations:
+    kubernetes.io/service-account.name: dashboard-view-user
+type: kubernetes.io/service-account-token
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dashboard-view-user
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dashboard-view-user-binding
+subjects:
+- kind: ServiceAccount
+  name: dashboard-view-user
+  namespace: kubernetes-dashboard
+roleRef:
+  kind: ClusterRole
+  name: dashboard-view-user
+  apiGroup: rbac.authorization.k8s.io
